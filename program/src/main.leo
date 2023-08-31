@@ -1,15 +1,15 @@
-program your_token.aleo {
+program matt_token_v2.aleo {
   mapping account: address => u64;
 
-  record token {
+  record m_token {
     owner: address,
     amount: u64,
   }
 
   /* Mint */
   transition mint_public(public receiver: address, public amount: u64) {
-    // Only OWNER_ADDRESS can mint
-    assert_eq(self.caller, OWNER_ADDRESS);
+    // Only aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j can mint
+    assert_eq(self.caller, aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j);
     return then finalize(receiver, amount);
   }
 
@@ -19,8 +19,8 @@ program your_token.aleo {
   }
 
   transition mint_private(receiver: address, amount: u64) -> m_token {
-    // Only OWNER_ADDRESS can mint
-    assert_eq(self.caller, OWNER_ADDRESS);
+    // Only aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j can mint
+    assert_eq(self.caller, aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j);
     return m_token {
       owner: receiver,
       amount: amount,

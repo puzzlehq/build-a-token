@@ -17,7 +17,7 @@ function Dashboard() {
   const { account } = useAccount();
   const { loading } = useConnect();
   const { records, request } = useRecords({
-    filter: { program_id: 'credits.aleo', type: 'unspent' }
+    filter: { program_id: 'matt_token_v2.aleo', type: 'unspent' }
   });
   const [totalBalance, setTotalBalance] = useState(0);
   const [maxSpendable, setMaxSpendable] = useState(0);
@@ -32,7 +32,7 @@ function Dashboard() {
     loading: execute_loading,
     transactionId,
   } = useExecuteProgram({
-    programId: 'credits.aleo',
+    programId: 'matt_token_v2.aleo',
     functionName: 'transfer_private',
     inputs: [record ?? '', recipient ?? '', amount + 'u64']
   });
@@ -47,7 +47,7 @@ function Dashboard() {
       let total = 0;
       let max = 0;
       records.forEach(r => {
-        const credits = Number(r.plaintext.split('microcredits:')[1].split('u64')[0]) / 1_000_000;
+        const credits = Number(r.plaintext.split('amount:')[1].split('u64')[0]);
         total += credits;
         max = Math.max(credits, max);
       });
@@ -85,7 +85,7 @@ function Dashboard() {
       return;
     }
     const recordToSpendIndex = records.findIndex(r => {
-      const credits = Number(r.plaintext.split('microcredits:')[1].split('u64')[0]) / 1_000_000;
+      const credits = Number(r.plaintext.split('amount:')[1].split('u64')[0]);
       if (credits > Number(amount!)) {
         console.log('setting record', r);
         return r;
@@ -153,7 +153,7 @@ function Dashboard() {
           <button disabled={execute_loading || !amount || !recipient} onClick={send}>send</button>
           {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
         </div>
-        {account?.address === 'aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu' && (  
+        {account?.address === 'aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j' && (  
           <Mint />
         )}
       </div>

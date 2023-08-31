@@ -10,8 +10,8 @@ function Mint() {
     loading: execute_loading,
     transactionId,
   } = useExecuteProgram({
-    programId: 'credits.aleo',
-    functionName: 'mint',
+    programId: 'matt_token_v2.aleo',
+    functionName: 'mint_private',
     inputs: [recipient ?? '', amount + 'u64'],
   });
 
