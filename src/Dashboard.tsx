@@ -1,6 +1,6 @@
 import { Record, useAccount, useConnect, useExecuteProgram, useRecords } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
-import Mint from './Mint';
+import Mint from './Mint.js';
 
 export const shortenAddress = (
   address: string,
@@ -14,8 +14,8 @@ export const shortenAddress = (
 };
 
 function Dashboard() {
-  const { account, loading } = useAccount();
-  const { isConnected } = useConnect();
+  const { account } = useAccount();
+  const { loading } = useConnect();
   const { records, request } = useRecords({
     filter: { program_id: 'credits.aleo', type: 'unspent' }
   });
@@ -31,11 +31,10 @@ function Dashboard() {
     execute,
     loading: execute_loading,
     transactionId,
-    error,
   } = useExecuteProgram({
     programId: 'credits.aleo',
     functionName: 'transfer_private',
-    inputs: record?.plaintext ?? '' + ' ' + recipient + ' ' + amount + 'u64',
+    inputs: [record ?? '', recipient ?? '', amount + 'u64']
   });
 
   useEffect(() => {
@@ -64,9 +63,9 @@ function Dashboard() {
     }
   }, [isReadyToExecute]);
 
-  if (!isConnected) {
-    throw new Error('dashboard shouldn\'t be showing rn');
-  }
+  // if (!isConnected) {
+  //   throw new Error('dashboard shouldn\'t be showing rn');
+  // }
 
   if (loading) {
     return <>loading...</>
@@ -102,9 +101,14 @@ function Dashboard() {
     setIsReadyToExecute(true);
   };
 
+  console.log(account);
+  if (!account) {
+    return <p>loading account info...</p>
+  }
+
   return (
     <>
-      <Header address={account!.address} />
+      <Header address={account.address} />
       <div className='w-full flex flex-col items-center justify-center gap-10'>
         <div className='w-1/2 border rounded-lg flex flex-col p-4'>
           <div className='w-full flex justify-between'>
@@ -155,7 +159,7 @@ function Dashboard() {
       </div>
     </>
   );
-};
+}
 
 export default Dashboard;
 

@@ -1,9 +1,9 @@
-import { useAccount, useConnect } from '@puzzlehq/sdk';
-import Dashboard from './Dashboard';
+import React from 'react';
+import { useConnect } from '@puzzlehq/sdk';
+import Dashboard from './Dashboard.js';
 
 function App() {
-  const { isConnected, loading } = useAccount();
-  const { connect } = useConnect();
+  const { connect, isConnected, loading } = useConnect();
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
@@ -14,6 +14,6 @@ function App() {
       }
     </div>
   );
-};
+}
 
 export default App;

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@puzzlehq/sdk": "~/code/puzzle/puzzle-sdk",
+    "@puzzlehq/sdk": "0.0.79",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

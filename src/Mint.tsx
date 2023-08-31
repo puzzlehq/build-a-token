@@ -9,11 +9,10 @@ function Mint() {
     execute,
     loading: execute_loading,
     transactionId,
-    error,
   } = useExecuteProgram({
     programId: 'credits.aleo',
     functionName: 'mint',
-    inputs: recipient + ' ' + amount + 'u64',
+    inputs: [recipient ?? '', amount + 'u64'],
   });
 
   return (
@@ -56,6 +55,6 @@ function Mint() {
       {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
     </div>
   );
-};
+}
 
 export default Mint;
