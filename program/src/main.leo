@@ -8,8 +8,8 @@ program matt_token_v2.aleo {
 
   /* Mint */
   transition mint_public(public receiver: address, public amount: u64) {
-    // Only aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j can mint
-    assert_eq(self.caller, aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j);
+    // Only OWNER_ADDRESS can mint
+    assert_eq(self.caller, OWNER_ADDRESS);
     return then finalize(receiver, amount);
   }
 
@@ -19,8 +19,8 @@ program matt_token_v2.aleo {
   }
 
   transition mint_private(receiver: address, amount: u64) -> m_token {
-    // Only aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j can mint
-    assert_eq(self.caller, aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j);
+    // Only OWNER_ADDRESS can mint
+    assert_eq(self.caller, OWNER_ADDRESS);
     return m_token {
       owner: receiver,
       amount: amount,
