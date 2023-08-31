@@ -1,4 +1,4 @@
-program matt_token_v2.aleo {
+program YOUR_TOKEN_NAME_HERE.aleo {
   mapping account: address => u64;
 
   record m_token {
@@ -8,7 +8,7 @@ program matt_token_v2.aleo {
 
   /* Mint */
   transition mint_public(public receiver: address, public amount: u64) {
-    // Only OWNER_ADDRESS can mint
+    // Only OWNER_ADDRESS can mint -- think of this as JPOWELL and Money printer priveleges
     assert_eq(self.caller, OWNER_ADDRESS);
     return then finalize(receiver, amount);
   }
@@ -19,7 +19,7 @@ program matt_token_v2.aleo {
   }
 
   transition mint_private(receiver: address, amount: u64) -> m_token {
-    // Only OWNER_ADDRESS can mint
+    // Only OWNER_ADDRESS can mint -- think of this as JPOWELL and Money printer priveleges
     assert_eq(self.caller, OWNER_ADDRESS);
     return m_token {
       owner: receiver,
