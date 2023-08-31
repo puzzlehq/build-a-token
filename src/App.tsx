@@ -1,4 +1,3 @@
-import React from 'react';
 import { useConnect } from '@puzzlehq/sdk';
 import Dashboard from './Dashboard.js';
 
