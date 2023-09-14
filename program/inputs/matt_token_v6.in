@@ -32,7 +32,7 @@ owner_rules: OwnerRules = owner_rules {
       n: 1u8,
     },
     owner_addresses: {
-      signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
+      owner_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
     },
 }
 
