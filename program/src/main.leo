@@ -1,50 +1,92 @@
-[mint_public]
-public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-public amount: u64 = 1000u64;
+import multisig.leo;
 
-[mint_private]
-receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-amount: u64 = 500u64;
+program matt_token_v6.aleo {
+  mapping account: address => u64;
 
-[transfer_public]
-public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-public amount: u64 = 10u64;
+  record Token {
+    owner: address,
+    amount: u64,
+  }
 
-[transfer_private]
-sender: Token = Token {
-  owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-  amount: 10u64,
-};
-receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-amount: u64 = 5u64;
-sigs: Signatures = sigs {
-    owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-    message: 10000000000097field,
-    signs_arr: {
-      signed_message: sign1r4tywvlurcn2sgveurw82cx5d8ey6ad98n8pydgs6hhcnu3tgqpjyk77thm9862gxat8faz5dysdgmgc8d0anpwelzyn3y5phrzskpp68aj7azv0kt85ac7nvzaksufzyn6uff7p6wagv2lyjv78y0jaq8k8a549p4x6qqh630drq5jq8jznsh3e5hax9rgax3ewe54cajjsz376u95,
-      signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-    }
+  /* Mint */
+  transition mint_public(public receiver: address, public amount: u64) {
+    // Only OWNER_ADDRESS can mint
+    assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
+    return then finalize(receiver, amount);
+  }
+
+  finalize mint_public(public receiver: address, public amount: u64) {
+    let receiver_amount: u64 = Mapping::get_or_use(account, receiver, 0u64);
+    Mapping::set(account, receiver, receiver_amount + amount);
+  }
+
+  transition mint_private(receiver: address, amount: u64) -> Token {
+    // Only OWNER_ADDRESS can mint
+    assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
+    return Token {
+      owner: receiver,
+      amount: amount,
+    };
+  }
+
+  /* Transfer */
+  transition transfer_public(public receiver: address, public amount: u64) {
+    return then finalize(self.caller, receiver, amount);
+  }
+
+  finalize transfer_public(public sender: address, public receiver: address, public amount: u64) {
+    let sender_amount: u64 = Mapping::get_or_use(account, sender, 0u64);
+    Mapping::set(account, sender, sender_amount - amount);
+
+    let receiver_amount: u64 = Mapping::get_or_use(account, receiver, 0u64);
+    Mapping::set(account, receiver, receiver_amount + amount);
+  }
+
+  transition transfer_private(sender: Token, receiver: address, amount: u64, sigs: multisig.leo/Signatures.record,
+   owner_rules: multisig.leo/OwnerRules.record) -> (Token, Token) {
+
+    let difference: u64 = sender.amount - amount;
+
+    let remaining: Token = Token {
+      owner: sender.owner,
+      amount: difference,
+    };
+
+    let transferred: Token = Token {
+      owner: receiver,
+      amount: amount,
+    };
+
+    return (remaining, transferred);
+  }
+
+  transition transfer_private_to_public(sender: Token, public receiver: address, public amount: u64) -> Token {
+    let difference: u64 = sender.amount - amount;
+
+    let remaining: Token = Token {
+      owner: sender.owner,
+      amount: difference,
+    };
+
+    return remaining then finalize(receiver, amount);
+  }
+
+  finalize transfer_private_to_public(public receiver: address, public amount: u64) {
+    let receiver_amount: u64 = Mapping::get_or_use(account, receiver, 0u64);
+    Mapping::set(account, receiver, receiver_amount + amount);
+  }
+
+  transition transfer_public_to_private(public receiver: address, public amount: u64) -> Token {
+    let transferred: Token = Token {
+      owner: receiver,
+      amount: amount,
+    };
+
+    return transferred then finalize(self.caller, amount);
+  }
+
+  finalize transfer_public_to_private(public sender: address, public amount: u64) {
+    let sender_amount: u64 = Mapping::get_or_use(account, sender, 0u64);
+    Mapping::set(account, sender, sender_amount - amount);
+  }
 }
-owner_rules: OwnerRules = owner_rules {
-    owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-    m_of_n: {
-      m: 1u8,
-      n: 1u8,
-    },
-    owner_addresses: {
-      signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-    },
-}
-
-
-[transfer_private_to_public]
-sender: Token = Token {
-  owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-  amount: 100u64,
-};
-public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-public amount: u64 = 15u64;
-
-[transfer_public_to_private]
-public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-public amount: u64 = 20u64;
