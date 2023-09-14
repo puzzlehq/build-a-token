@@ -1,4 +1,5 @@
 *.env
+program/build/*
 
 # Logs
 logs
