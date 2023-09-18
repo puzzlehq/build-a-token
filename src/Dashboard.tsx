@@ -79,6 +79,22 @@ function Dashboard() {
     setAmount(e.target.value);
   };
 
+  const onOwnerRulesChange = (e: any) {
+    // todo: implement accurate logic here
+    const inputValue = e.target.value;
+    try {
+      const parsedData = JSON.parse(inputValue);
+      console.log(parsedData);
+    // todo: do something with parsed data
+  } catch (error) {
+    console.error("Error parsing JSON:", error.message);
+  }
+}
+
+  const onSignaturesChange = (e: any) => {
+    // todo: add logic to parse owner signatres record and consume
+  }
+
   const send = () => {
     if (!records) {
       console.log('send called with no records');
@@ -121,7 +137,7 @@ function Dashboard() {
           </div>
         </div>
         <div className='w-1/2 border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
-          <span className='text-xl font-bold'>Transfer</span>
+          <span className='text-xl font-bold'>Transfer Private</span>
           <div className='w-[80%]'>
             <label htmlFor="recipient" className="block text-sm font-medium leading-6">
               Recipient
@@ -150,10 +166,57 @@ function Dashboard() {
               />
             </div>
           </div>
+          <div className='w-[80%]'>
+            <label htmlFor="SignaturesRecord" className="block text-sm font-medium leading-6">
+                Signatures Record
+            </label>
+            <div className="mt-2">
+                <textarea
+                    name="signatures"
+                    id="signatures"
+                    className="block w-full h-56 rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    placeholder="
+                    {
+                      owner: address,
+                      message: Message,
+                      signatures: {
+                        signed_message: signature,
+                        signer_address: address,
+                      },
+                    }"
+                    onChange={onAmountChange}
+                    rows="5"
+                ></textarea>
+              </div>
+          </div>
+
+          <div className='w-[80%]'>
+            <label htmlFor="OwnerRulesRecord" className="block text-sm font-medium leading-6">
+                Signatures Record
+            </label>
+            <div className="mt-2">
+                <textarea
+                    name="ownerrules"
+                    id="ownerrules"
+                    className="block w-full h-56 rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    placeholder="
+                    {
+                      owner: address,
+                      message: Message,
+                      signatures: {
+                        signed_message: signature,
+                        signer_address: address,
+                      },
+                    }"
+                    onChange={onOwnerRulesChange}
+                    rows="5"
+                ></textarea>
+              </div>
+          </div>
           <button disabled={execute_loading || !amount || !recipient} onClick={send}>send</button>
           {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
         </div>
-        {account?.address === 'aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j' && (  
+        {account?.address === 'aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j' && (
           <Mint />
         )}
       </div>

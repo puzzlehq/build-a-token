@@ -3,31 +3,31 @@ import multisig.leo;
 program matt_token_v6.aleo {
   mapping account: address => u64;
 
-  struct SignsArr {
-    signed_message: signature,
-    signer_address: address,
-  }
+  // struct SignsArr {
+  //   signed_message: signature,
+  //   signer_address: address,
+  // }
 
-  struct MofN {
-    m: u8,
-    n: u8,
-  }
+  // struct MofN {
+  //   m: u8,
+  //   n: u8,
+  // }
 
-  struct OwnerArr {
-    owner_address: address,
-  }
+  // struct OwnerArr {
+  //   owner_address: address,
+  // }
 
-  record Signatures {
-    owner: address,
-    message: field,
-    signs_arr: SignsArr,
-  }
+  // record Signatures {
+  //   owner: address,
+  //   message: field,
+  //   signs_arr: SignsArr,
+  // }
 
-  record OwnerRules {
-    owner: address,
-    m_of_n: MofN,
-    owner_addresses: OwnerArr,
-  }
+  // record OwnerRules {
+  //   owner: address,
+  //   m_of_n: MofN,
+  //   owner_addresses: OwnerArr,
+  // }
 
   record Token {
     owner: address,
@@ -68,15 +68,15 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_private(sender: Token, receiver: address, amount: u64, sigs: Signatures,
-   owner_rules: OwnerRules) -> (Token, Token) {
+  transition transfer_private(sender: Token, receiver: address, amount: u64, sigs: multisig.leo/Signatures.record,
+  owner_rules: multisig.leo/OwnerRules.record) -> (Token, Token) {
     // Check message in signatures struct matches message here
     // Can't do yet until have string support, self.program_id and self.function and cast str,u8,addr to field
-    
+
     // Check Signatures in Signatures are valid
     let signature_check: bool = true;
-    let signer_address: address = sigs.signs_arr.signer_address;
-    let signed_message: signature = sigs.signs_arr.signed_message;
+    let signer_address: address = sigs.signatures.signer_address;
+    let signed_message: signature = sigs.signatures.signed_message;
     let is_valid_sig: bool = signed_message.verify(signer_address, sigs.message);
     assert_eq(signature_check,is_valid_sig);
 

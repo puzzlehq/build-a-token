@@ -1,15 +1,15 @@
-[mint_public]
-public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-public amount: u64 = 1000u64;
+// The program input for program/src/main.leo
+// [mint_public]
+// public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+// public amount: u64 = 1000u64;
 
-[mint_private]
-receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-amount: u64 = 500u64;
+// [mint_private]
+// receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+// amount: u64 = 500u64;
 
-[transfer_public]
-public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-public amount: u64 = 10u64;
-
+// [transfer_public]
+// public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
+// public amount: u64 = 10u64;
 [transfer_private]
 sender: Token = Token {
   owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
@@ -17,15 +17,20 @@ sender: Token = Token {
 };
 receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
 amount: u64 = 5u64;
-sigs: Signatures = sigs {
+sigs: SigsVerification = SigsVerification {
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-    message: 10000000000097field,
-    signs_arr: {
+    message: Message = Message {
+        field_1: 1417932355233544612992506905309185174268766483034531463490526596971329930188field,
+        field_2: 857366855022584258090304858867677511337152721136443729459785504464936759007field,
+        field_3: 661996427362941245983999775471157695572106383975998945121683116597522870115field,
+        field_4: 6636019266869057787281456239200338829161317778197454999565264594669303616735field
+    },
+    signatures: {
       signed_message: sign1r4tywvlurcn2sgveurw82cx5d8ey6ad98n8pydgs6hhcnu3tgqpjyk77thm9862gxat8faz5dysdgmgc8d0anpwelzyn3y5phrzskpp68aj7azv0kt85ac7nvzaksufzyn6uff7p6wagv2lyjv78y0jaq8k8a549p4x6qqh630drq5jq8jznsh3e5hax9rgax3ewe54cajjsz376u95,
       signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
     }
-}
-owner_rules: OwnerRules = owner_rules {
+};
+owner_rules: OwnerRules = OwnerRules {
     owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
     m_of_n: {
       m: 1u8,
@@ -34,17 +39,16 @@ owner_rules: OwnerRules = owner_rules {
     owner_addresses: {
       owner_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
     },
-}
-
-
-[transfer_private_to_public]
-sender: Token = Token {
-  owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-  amount: 100u64,
 };
-public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-public amount: u64 = 15u64;
 
-[transfer_public_to_private]
-public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-public amount: u64 = 20u64;
+// [transfer_private_to_public]
+// sender: Token = Token {
+//   owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
+//   amount: 100u64,
+// };
+// public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
+// public amount: u64 = 15u64;
+
+// [transfer_public_to_private]
+// public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+// public amount: u64 = 20u64;
