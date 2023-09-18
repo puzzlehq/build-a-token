@@ -3,6 +3,13 @@ import multisig.leo;
 program matt_token_v6.aleo {
   mapping account: address => u64;
 
+  // struct Message_2 {
+  //       field_1: field,
+  //       field_2: field,
+  //       field_3: field,
+  //       field_4: field,
+  // }
+
   // struct SignsArr {
   //   signed_message: signature,
   //   signer_address: address,
@@ -29,7 +36,7 @@ program matt_token_v6.aleo {
   //   owner_addresses: OwnerArr,
   // }
 
-  record Token {
+  record token {
     owner: address,
     amount: u64,
   }
@@ -46,10 +53,10 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition mint_private(receiver: address, amount: u64) -> Token {
+  transition mint_private(receiver: address, amount: u64) -> token {
     // Only OWNER_ADDRESS can mint
     assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
-    return Token {
+    return token {
       owner: receiver,
       amount: amount,
     };
@@ -68,37 +75,30 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_private(sender: Token, receiver: address, amount: u64, sigs: multisig.leo/Signatures.record,
-  owner_rules: multisig.leo/OwnerRules.record) -> (Token, Token) {
-    // Check message in signatures struct matches message here
-    // Can't do yet until have string support, self.program_id and self.function and cast str,u8,addr to field
 
-    // Check Signatures in Signatures are valid
-    let signature_check: bool = true;
-    let signer_address: address = sigs.signatures.signer_address;
-    let signed_message: signature = sigs.signatures.signed_message;
-    let is_valid_sig: bool = signed_message.verify(signer_address, sigs.message);
-    assert_eq(signature_check,is_valid_sig);
+// signatures record
+// Owner_Rules Record..
+// {
+//   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
+//   m_of_n: {
+//     m: 1u8.private,
+//     n: 1u8.private
+//   },
+//   owner_addresses: {
+//     owner_address: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private
+//   },
+//   _nonce: 4019547848688729640594437604272829685474077619781653868004802165491888846735group.public
+// }
 
-    // Check signer addresses match owner rules addresses
-    let owner_address: address = owner_rules.owner_addresses.owner_address;
-    assert_eq(signer_address,owner_address);
-
-    // Check # of signatures is equal to signatures required in owner_rules
-    // Would like unconstrained arrays and to be able to check length to fully do this
-    // for now just hardcoding to 1
-    let num_of_signatures: u8 = 1u8;
-    let m: u8 = owner_rules.m_of_n.m;
-    assert_eq(num_of_signatures, m);
-
+  transition transfer_private(sender: token, receiver: address, amount: u64) -> (token, token) {
     let difference: u64 = sender.amount - amount;
 
-    let remaining: Token = Token {
+    let remaining: token = token {
       owner: sender.owner,
       amount: difference,
     };
 
-    let transferred: Token = Token {
+    let transferred: token = token {
       owner: receiver,
       amount: amount,
     };
@@ -106,10 +106,49 @@ program matt_token_v6.aleo {
     return (remaining, transferred);
   }
 
-  transition transfer_private_to_public(sender: Token, public receiver: address, public amount: u64) -> Token {
+  transition transfer_private_ms(sender: token, receiver: address, amount: u64, sigs: multisig.leo/signatures.record,
+  owner_rul: multisig.leo/owner_rules.record) -> (token, token) {
+    // Check message in signatures struct matches message here
+    // Can't do yet until have string support, self.program_id and self.function and cast str,u8,addr to field
+
+    // Check Signatures in Signatures are valid
+    let signature_check: bool = true;
+    let sigs_verify: multisig.leo/SigsVerification = sigs.signatures;
+    let signer_address: address = sigs_verify.signer_address;
+    let sig: signature = sigs_verify.sig;
+    let is_valid_sig: bool = sig.verify(self.caller, sigs.message);
+    assert_eq(signature_check, is_valid_sig);
+
+    // Check signer addresses match owner rules addresses
+    let owner_address: address = owner_rul.owner_addresses.owner_address;
+    assert_eq(self.caller, owner_address);
+
+    // Check # of signatures is equal to signatures required in owner_rules
+    // Would like unconstrained arrays and to be able to check length to fully do this
+    // for now just hardcoding to 1
+    let num_of_signatures: u8 = 1u8;
+    let m: u8 = owner_rul.m_of_n.m;
+    assert_eq(num_of_signatures, m);
+
     let difference: u64 = sender.amount - amount;
 
-    let remaining: Token = Token {
+    let remaining: token = token {
+      owner: sender.owner,
+      amount: difference,
+    };
+
+    let transferred: token = token {
+      owner: receiver,
+      amount: amount,
+    };
+
+    return (remaining, transferred);
+  }
+
+  transition transfer_private_to_public(sender: token, public receiver: address, public amount: u64) -> token {
+    let difference: u64 = sender.amount - amount;
+
+    let remaining: token = token {
       owner: sender.owner,
       amount: difference,
     };
@@ -122,8 +161,8 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_public_to_private(public receiver: address, public amount: u64) -> Token {
-    let transferred: Token = Token {
+  transition transfer_public_to_private(public receiver: address, public amount: u64) -> token {
+    let transferred: token = token {
       owner: receiver,
       amount: amount,
     };
