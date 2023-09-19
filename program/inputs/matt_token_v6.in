@@ -1,55 +1,48 @@
 // The program input for program/src/main.leo
-// [mint_public]
-// public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-// public amount: u64 = 1000u64;
 
-// [mint_private]
-// receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-// amount: u64 = 500u64;
+[mint_public]
+public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+public amount: u64 = 1000u64;
 
-// [transfer_public]
-// public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-// public amount: u64 = 10u64;
-[transfer_private_ms]
-sender: token = token {
+[mint_private]
+receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+amount: u64 = 500u64;
+
+[transfer_public]
+public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
+public amount: u64 = 10u64;
+
+[transfer_private]
+sender: Token = Token {
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
   amount: 1u64,
 };
 receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
 amount: u64 = 5u64;
-sigs: signatures = signatures {
+sigs: Signatures = Signatures {
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
-  message: Message = Message {
-    field_1: 3268714591284264081380796766429199893904171177515335634701931646343567360541field,
-    field_2: 857366855022584258090304858867677511337152721136443729459785504464936759007field,
-    field_3: 661996427362941245983999775471157695572106383975998945121683116597522870115field,
-    field_4: 6636019266869057787281456239200338829161317778197454999565264594669303616735field,
-  },
-  signatures: SigsVerification = SigsVerification {
-    sig: sign1aakqp8p7ef9je9uwf3ayhph9gvhfggnxt5fw287u7c5s2udxrspwqhu9q5h4u4nsaj6pkt4hntt50vujjp60puym3ngz8s209ru3gpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqz72pfla,
-    signer_address: self.caller,
-  },
+  message_one: 3268714591284264081380796766429199893904171177515335634701931646343567360541field,
+  message_two: 857366855022584258090304858867677511337152721136443729459785504464936759007field,
+  message_three: 661996427362941245983999775471157695572106383975998945121683116597522870115field,
+  message_four: 6636019266869057787281456239200338829161317778197454999565264594669303616735field,
+  signed_message: sign1aakqp8p7ef9je9uwf3ayhph9gvhfggnxt5fw287u7c5s2udxrspwqhu9q5h4u4nsaj6pkt4hntt50vujjp60puym3ngz8s209ru3gpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqz72pfla,
+  signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
 };
-owner_rul: owner_rules = owner_rules {
-  owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
-  m_of_n: {
-    m: 1u8.private,
-    n: 1u8.private
-  },
-  owner_addresses: OwnerAddr = OwnerAddr {
-    owner_address: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private
-  },
-  _nonce: 3371874231678782406739215332191319835265843915134449100717455525260524439828group.public
-}
+owner_rul: OwnerRules = OwnerRules {
+  owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
+  m: 1u8,
+  n: 1u8,
+  signer_address_one: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
+};
 
-// [transfer_private_to_public]
-// sender: Token = Token {
-//   owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-//   amount: 100u64,
-// };
-// public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
-// public amount: u64 = 15u64;
+[transfer_private_to_public]
+sender: Token = Token {
+  owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
+  amount: 100u64,
+};
+public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
+public amount: u64 = 15u64;
 
-// [transfer_public_to_private]
-// public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
-// public amount: u64 = 20u64;
+[transfer_public_to_private]
+public receiver: address = aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6;
+public amount: u64 = 20u64;

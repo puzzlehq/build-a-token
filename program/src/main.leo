@@ -1,42 +1,16 @@
-import multisig.leo;
+import puzzle_account_v001.leo;
 
-program matt_token_v6.aleo {
+program matt_Token_v6.aleo {
   mapping account: address => u64;
 
-  // struct Message_2 {
-  //       field_1: field,
-  //       field_2: field,
-  //       field_3: field,
-  //       field_4: field,
-  // }
+  struct Message {
+        field_1: field,
+        field_2: field,
+        field_3: field,
+        field_4: field,
+  }
 
-  // struct SignsArr {
-  //   signed_message: signature,
-  //   signer_address: address,
-  // }
-
-  // struct MofN {
-  //   m: u8,
-  //   n: u8,
-  // }
-
-  // struct OwnerArr {
-  //   owner_address: address,
-  // }
-
-  // record Signatures {
-  //   owner: address,
-  //   message: field,
-  //   signs_arr: SignsArr,
-  // }
-
-  // record OwnerRules {
-  //   owner: address,
-  //   m_of_n: MofN,
-  //   owner_addresses: OwnerArr,
-  // }
-
-  record token {
+  record Token {
     owner: address,
     amount: u64,
   }
@@ -53,10 +27,10 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition mint_private(receiver: address, amount: u64) -> token {
+  transition mint_private(receiver: address, amount: u64) -> Token {
     // Only OWNER_ADDRESS can mint
     assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
-    return token {
+    return Token {
       owner: receiver,
       amount: amount,
     };
@@ -75,69 +49,52 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
+  transition transfer_private(sender: Token, receiver: address, amount: u64, owner_rules: puzzle_account_v001.leo/OwnerRules.record, sigs: puzzle_account_v001.leo/Signatures.record) -> (Token, Token) {
+    
+    // Check Signatures in Signatures are valid && that signatures match what's required by account owner rules
+    // PS: keeping this verbose for now for code clarity but can certainly shed lines of code
 
-// signatures record
-// Owner_Rules Record..
-// {
-//   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
-//   m_of_n: {
-//     m: 1u8.private,
-//     n: 1u8.private
-//   },
-//   owner_addresses: {
-//     owner_address: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private
-//   },
-//   _nonce: 4019547848688729640594437604272829685474077619781653868004802165491888846735group.public
-// }
-
-  transition transfer_private(sender: token, receiver: address, amount: u64) -> (token, token) {
-    let difference: u64 = sender.amount - amount;
-
-    let remaining: token = token {
-      owner: sender.owner,
-      amount: difference,
+    // Step 1: Pull signatures data out of Signatures record
+    let signatures_parent_tuple: (field, field, field, field, signature, address) = puzzle_account_v001.leo/consume_signatures_record(sigs);
+    let message: Message = Message {
+      field_1: signatures_parent_tuple.0,
+      field_2: signatures_parent_tuple.1,
+      field_3: signatures_parent_tuple.2,
+      field_4: signatures_parent_tuple.3,
     };
+    let signed_message: signature = signatures_parent_tuple.4;
+    let signer_address: address = signatures_parent_tuple.5;
 
-    let transferred: token = token {
-      owner: receiver,
-      amount: amount,
-    };
+    // Step 2: Pull owner rules data out of OwnerRules record
+    let owner_rules_parent_tuple: (u8, u8, address) = puzzle_account_v001.leo/consume_owner_rules_record(owner_rules);
+    let m: u8 = owner_rules_parent_tuple.0;
+    let n: u8 = owner_rules_parent_tuple.1;
+    let signer_address_one: address = owner_rules_parent_tuple.2;
 
-    return (remaining, transferred);
-  }
 
-  transition transfer_private_ms(sender: token, receiver: address, amount: u64, sigs: multisig.leo/signatures.record,
-  owner_rul: multisig.leo/owner_rules.record) -> (token, token) {
-    // Check message in signatures struct matches message here
+    // Step 3: Verify message in Signatures Record matches function call and program id rn
     // Can't do yet until have string support, self.program_id and self.function and cast str,u8,addr to field
 
-    // Check Signatures in Signatures are valid
+
+    // Step 3: Verify signatures against message
     let signature_check: bool = true;
-    let sigs_verify: multisig.leo/SigsVerification = sigs.signatures;
-    let signer_address: address = sigs_verify.signer_address;
-    let sig: signature = sigs_verify.sig;
-    let is_valid_sig: bool = sig.verify(self.caller, sigs.message);
-    assert_eq(signature_check, is_valid_sig);
-
-    // Check signer addresses match owner rules addresses
-    let owner_address: address = owner_rul.owner_addresses.owner_address;
-    assert_eq(self.caller, owner_address);
-
-    // Check # of signatures is equal to signatures required in owner_rules
-    // Would like unconstrained arrays and to be able to check length to fully do this
-    // for now just hardcoding to 1
+    let is_valid_sig: bool = signed_message.verify(signer_address,message);
+    assert_eq(signature_check,is_valid_sig);
+    
+    // Step 4: Check # of signatures is equal to signatures required in owner rules
+    // Would like unconstrained arrays and to be able to check length to fully do this for now just hardcoding to 1
     let num_of_signatures: u8 = 1u8;
-    let m: u8 = owner_rul.m_of_n.m;
     assert_eq(num_of_signatures, m);
 
+    // Private Transfer Logic
     let difference: u64 = sender.amount - amount;
 
-    let remaining: token = token {
+    let remaining: Token = Token {
       owner: sender.owner,
       amount: difference,
     };
 
-    let transferred: token = token {
+    let transferred: Token = Token {
       owner: receiver,
       amount: amount,
     };
@@ -145,10 +102,10 @@ program matt_token_v6.aleo {
     return (remaining, transferred);
   }
 
-  transition transfer_private_to_public(sender: token, public receiver: address, public amount: u64) -> token {
+  transition transfer_private_to_public(sender: Token, public receiver: address, public amount: u64) -> Token {
     let difference: u64 = sender.amount - amount;
 
-    let remaining: token = token {
+    let remaining: Token = Token {
       owner: sender.owner,
       amount: difference,
     };
@@ -161,8 +118,8 @@ program matt_token_v6.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_public_to_private(public receiver: address, public amount: u64) -> token {
-    let transferred: token = token {
+  transition transfer_public_to_private(public receiver: address, public amount: u64) -> Token {
+    let transferred: Token = Token {
       owner: receiver,
       amount: amount,
     };
