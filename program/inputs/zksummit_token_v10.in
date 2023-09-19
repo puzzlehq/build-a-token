@@ -11,7 +11,7 @@ public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3
 public amount: u64 = 10u64;
 
 [transfer_private]
-sender: m_token = m_token {
+sender: ZK10 = ZK10 {
   owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
   amount: 10u64,
 };
@@ -19,7 +19,7 @@ receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5
 amount: u64 = 5u64;
 
 [transfer_private_to_public]
-sender: m_token = m_token {
+sender: ZK10 = ZK10 {
   owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
   amount: 100u64,
 };

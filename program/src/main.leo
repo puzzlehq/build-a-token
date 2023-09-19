@@ -1,7 +1,7 @@
-program matt_token_v3.aleo {
+program zksummit_token_v10.aleo {
   mapping account: address => u64;
 
-  record m_token {
+  record ZK10 {
     owner: address,
     amount: u64,
   }
@@ -19,11 +19,11 @@ program matt_token_v3.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition mint_private(receiver: address, amount: u64) -> m_token {
+  transition mint_private(receiver: address, amount: u64) -> ZK10 {
     // Only OWNER_ADDRESS can mint -- think of this as JPOWELL and Money printer priveleges
     // Removing assertion for demo at ZK Summit for iOS
     // assert_eq(self.caller, OWNER_ADDRESS);
-    return m_token {
+    return ZK10 {
       owner: receiver,
       amount: amount,
     };
@@ -42,15 +42,15 @@ program matt_token_v3.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_private(sender: m_token, receiver: address, amount: u64) -> (m_token, m_token) {
+  transition transfer_private(sender: ZK10, receiver: address, amount: u64) -> (ZK10, ZK10) {
     let difference: u64 = sender.amount - amount;
 
-    let remaining: m_token = m_token {
+    let remaining: ZK10 = ZK10 {
       owner: sender.owner,
       amount: difference,
     };
 
-    let transferred: m_token = m_token {
+    let transferred: ZK10 = ZK10 {
       owner: receiver,
       amount: amount,
     };
@@ -58,10 +58,10 @@ program matt_token_v3.aleo {
     return (remaining, transferred);
   }
 
-  transition transfer_private_to_public(sender: m_token, public receiver: address, public amount: u64) -> m_token {
+  transition transfer_private_to_public(sender: ZK10, public receiver: address, public amount: u64) -> ZK10 {
     let difference: u64 = sender.amount - amount;
 
-    let remaining: m_token = m_token {
+    let remaining: ZK10 = ZK10 {
       owner: sender.owner,
       amount: difference,
     };
@@ -74,8 +74,8 @@ program matt_token_v3.aleo {
     Mapping::set(account, receiver, receiver_amount + amount);
   }
 
-  transition transfer_public_to_private(public receiver: address, public amount: u64) -> m_token {
-    let transferred: m_token = m_token {
+  transition transfer_public_to_private(public receiver: address, public amount: u64) -> ZK10 {
+    let transferred: ZK10 = ZK10 {
       owner: receiver,
       amount: amount,
     };
