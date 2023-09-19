@@ -10,7 +10,7 @@ function Mint() {
     loading: execute_loading,
     transactionId,
   } = useExecuteProgram({
-    programId: 'matt_token_v2.aleo',
+    programId: 'zksummit_token_v10.aleo',
     functionName: 'mint_private',
     inputs: [recipient ?? '', amount + 'u64'],
   });

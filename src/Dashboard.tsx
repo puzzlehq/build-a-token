@@ -17,7 +17,7 @@ function Dashboard() {
   const { account } = useAccount();
   const { loading } = useConnect();
   const { records, request } = useRecords({
-    filter: { program_id: 'matt_token_v2.aleo', type: 'unspent' }
+    filter: { program_id: 'zksummit_token_v10.aleo', type: 'unspent' }
   });
   const [totalBalance, setTotalBalance] = useState(0);
   const [maxSpendable, setMaxSpendable] = useState(0);
@@ -32,7 +32,7 @@ function Dashboard() {
     loading: execute_loading,
     transactionId,
   } = useExecuteProgram({
-    programId: 'matt_token_v2.aleo',
+    programId: 'zksummit_token_v10.aleo',
     functionName: 'transfer_private',
     inputs: [record ?? '', recipient ?? '', amount + 'u64']
   });
@@ -153,7 +153,7 @@ function Dashboard() {
           <button disabled={execute_loading || !amount || !recipient} onClick={send}>send</button>
           {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
         </div>
-        {account?.address === 'aleo1726dd49l5u7tcqaqxksrk6pw5kfcdxvevvkas4j3lmns882frcxqp45h9j' && (  
+        {account?.address === account.address && (  
           <Mint />
         )}
       </div>
@@ -166,7 +166,7 @@ export default Dashboard;
 function Header({address}: {address: string}) {
   return (
     <div className='w-full fixed top-0 h-16 border-b flex justify-between items-center px-8'>
-      <span className='text-3xl font-bold'>Build-A-Token</span>
+      <span className='text-3xl font-bold'>ZK Summit 10 Token</span>
       <span className="text-m">
         {shortenAddress(address)}
       </span>
