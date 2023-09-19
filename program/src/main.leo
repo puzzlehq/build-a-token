@@ -18,7 +18,7 @@ program matt_token_v6.aleo {
   /* Mint */
   transition mint_public(public receiver: address, public amount: u64) {
     // Only OWNER_ADDRESS can mint
-    assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
+    assert_eq(self.caller, aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6);
     return then finalize(receiver, amount);
   }
 
@@ -29,7 +29,7 @@ program matt_token_v6.aleo {
 
   transition mint_private(receiver: address, amount: u64) -> Token {
     // Only OWNER_ADDRESS can mint
-    assert_eq(self.caller, aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u);
+    assert_eq(self.caller, aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6);
     return Token {
       owner: receiver,
       amount: amount,
