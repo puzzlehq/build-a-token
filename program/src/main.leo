@@ -9,7 +9,8 @@ program YOUR_TOKEN_NAME_HERE.aleo {
   /* Mint */
   transition mint_public(public receiver: address, public amount: u64) {
     // Only OWNER_ADDRESS can mint -- think of this as JPOWELL and Money printer priveleges
-    assert_eq(self.caller, OWNER_ADDRESS);
+    // Removing assertion for demo at ZK Summit for iOS
+    // assert_eq(self.caller, OWNER_ADDRESS);
     return then finalize(receiver, amount);
   }
 
@@ -20,7 +21,8 @@ program YOUR_TOKEN_NAME_HERE.aleo {
 
   transition mint_private(receiver: address, amount: u64) -> m_token {
     // Only OWNER_ADDRESS can mint -- think of this as JPOWELL and Money printer priveleges
-    assert_eq(self.caller, OWNER_ADDRESS);
+    // Removing assertion for demo at ZK Summit for iOS
+    // assert_eq(self.caller, OWNER_ADDRESS);
     return m_token {
       owner: receiver,
       amount: amount,
