@@ -1,4 +1,4 @@
-program YOUR_TOKEN_NAME_HERE.aleo {
+program matt_token_v3.aleo {
   mapping account: address => u64;
 
   record m_token {
