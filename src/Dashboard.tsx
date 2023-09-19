@@ -116,7 +116,7 @@ function Dashboard() {
             <span>{totalBalance.toFixed(2)}</span>
           </div>
           <div className='w-full flex justify-between'>
-            <span className='font-bold'>Max Spendable Balance</span>
+            <span className='font-bold'>Largest Record to Spend</span>
             <span>{maxSpendable.toFixed(2)}</span>
           </div>
         </div>
