@@ -1,6 +1,6 @@
 import puzzle_account_v001.leo;
 
-program matt_Token_v6.aleo {
+program matt_token_v6.aleo {
   mapping account: address => u64;
 
   struct Message {
