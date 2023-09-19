@@ -12,6 +12,40 @@ amount: u64 = 500u64;
 public receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
 public amount: u64 = 10u64;
 
+// Steps to run and test transfers
+// Step 1: clone and open multisig-msg-generation branch in our snarkVM fork
+// Step 2: cd into that snarkvm repo and run cargo install --path .
+// Step 3: now hop into a new terminal and cd into the program folder here
+// Step 4: Make sure .env is PK for the tuvr6 address -- dm me if you need
+// Step 5: run "leo build"
+// Step 6: cd into the build folder and run "snarkvm message mint_private aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6 500u64"
+// NOTE --> the only thing important for this step is to record the fields printed in the snarkVM print statements where it says "RESULT:" and 4 fields as well as the signature
+//      --> this is because of the way leo verfiy works -- it messages with the message and you need to fix it this way -- DM if youre curious why
+//      --> the only reason the mint_private function was used was because it's short and easy lol
+// Step 7: input the 4 fields and the signature into the Signatures record that you will use for the transfer private record 
+// Step 8: run snarkvm execute transfer_private and voila!
+// Example of snarkvm execute transfer_private with correct spacing is here:
+// snarkvm execute transfer_private "{
+  //       owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+  //       amount: 100u64.private,
+  //       _nonce: 6586771265379155927089644749305420610382723873232320906747954786091923851913group.public
+  //   }" aleo13ssze66adjjkt795z9u5wpq8h6kn0y2657726h4h3e3wfnez4vqsm3008q 20u64 "{
+  //       owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+	// m: 1u8.private,
+	// n: 1u8.private,
+	// signer_address_one: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+  //       _nonce: 6586771265379155927089644749305420610382723873232320906747954786091923851913group.public
+  //   }" "{
+  //       owner: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+	// message_one: 5823121428645937391823805683553212917486144895894895599930871379350903576254field.private,
+	// message_two: 7451395137615551619186955760210037599731488301953352819105539296284822418458field.private,
+	// message_three: 5584901674127210511285212636653086953785547648266754325869309891476908632228field.private,
+	// message_four: 7519836578675106174675381034561325010608141552590282495260442290103344380140field.private,
+	// signed_message: sign1ac3fhtxne3pwge9h9mt5l3tn0gz09wc34wt7zfvramhrvxwv3spwumaan4j4wv5hkp6sppth9j0c84mxq5e68pfqxs0x2686tmy4vqc6x34507sntz30plpkh9gk3yx0cmzyu6ddu0kcswz55lq3v4mezzjx3gepcrxcrjh6an0p3gvwrj6qg9qapstnlgrv6ux326pu79vqcakwf66.private,
+	// signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6.private,
+  //       _nonce: 6586771265379155927089644749305420610382723873232320906747954786091923851913group.public
+  //   }"
+
 [transfer_private]
 sender: Token = Token {
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
@@ -19,6 +53,12 @@ sender: Token = Token {
 };
 receiver: address = aleo14qe22anfwd6rfgj53evyxhx8pdqntg8jxc2qvc7j2wypy0j3yuzsae5q08;
 amount: u64 = 5u64;
+owner_rul: OwnerRules = OwnerRules {
+  owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
+  m: 1u8,
+  n: 1u8,
+  signer_address_one: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
+};
 sigs: Signatures = Signatures {
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
   message_one: 3268714591284264081380796766429199893904171177515335634701931646343567360541field,
@@ -28,12 +68,7 @@ sigs: Signatures = Signatures {
   signed_message: sign1aakqp8p7ef9je9uwf3ayhph9gvhfggnxt5fw287u7c5s2udxrspwqhu9q5h4u4nsaj6pkt4hntt50vujjp60puym3ngz8s209ru3gpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqz72pfla,
   signer_address: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
 };
-owner_rul: OwnerRules = OwnerRules {
-  owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
-  m: 1u8,
-  n: 1u8,
-  signer_address_one: aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6,
-};
+
 
 [transfer_private_to_public]
 sender: Token = Token {
