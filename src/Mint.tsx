@@ -16,7 +16,7 @@ function Mint() {
   });
 
   return (
-    <div className='w-1/2 border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
+    <div className='w-full border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
       <span className='text-xl font-bold'>Mint</span>
       <div className='w-[80%]'>
         <label htmlFor="recipient" className="block text-sm font-medium leading-6">
@@ -52,7 +52,7 @@ function Mint() {
       >
         mint
       </button>
-      {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
+      {transactionId && <a target='_blank' href={`https://vm.aleo.org/api/testnet3/transaction/${transactionId}`}>View your transaction</a>}
     </div>
   );
 }

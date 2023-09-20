@@ -47,7 +47,7 @@ function Dashboard() {
       let total = 0;
       let max = 0;
       records.forEach(r => {
-        const credits = Number(r.plaintext.split('amount:')[1].split('u64')[0]);
+        const credits = Number(r.plaintext.split('amount:')[1]?.split('u64')[0]) ?? 0;
         total += credits;
         max = Math.max(credits, max);
       });
@@ -107,20 +107,19 @@ function Dashboard() {
   }
 
   return (
-    <>
-      <Header address={account.address} />
-      <div className='w-full flex flex-col items-center justify-center gap-10'>
-        <div className='w-1/2 border rounded-lg flex flex-col p-4'>
+    <div className='flex flex-col w-full h-full gap-2 items-center'>
+      <div className='w-3/4 lg:w-1/2 flex flex-col items-center justify-center gap-10 pb-4'>
+        <div className='w-full border rounded-lg flex flex-col p-4'>
           <div className='w-full flex justify-between'>
             <span className='font-bold'>Total Balance</span>
-            <span>{totalBalance.toFixed(2)}</span>
+            <span>{(totalBalance || 0).toFixed(2) ?? 0}</span>
           </div>
           <div className='w-full flex justify-between'>
             <span className='font-bold'>Largest Record to Spend</span>
-            <span>{maxSpendable.toFixed(2)}</span>
+            <span>{(maxSpendable || 0).toFixed(2) ?? 0}</span>
           </div>
         </div>
-        <div className='w-1/2 border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
+        <div className='w-full border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
           <span className='text-xl font-bold'>Transfer</span>
           <div className='w-[80%]'>
             <label htmlFor="recipient" className="block text-sm font-medium leading-6">
@@ -151,25 +150,14 @@ function Dashboard() {
             </div>
           </div>
           <button disabled={execute_loading || !amount || !recipient} onClick={send}>send</button>
-          {transactionId && <span>{'Send Transaction ID: ' + transactionId}</span>}
+          {transactionId && <a target='_blank' href={`https://vm.aleo.org/api/testnet3/transaction/${transactionId}`}>View your transaction</a>}
         </div>
         {account?.address === account.address && (  
           <Mint />
         )}
       </div>
-    </>
+    </div>
   );
 }
 
 export default Dashboard;
-
-function Header({address}: {address: string}) {
-  return (
-    <div className='w-full fixed top-0 h-16 border-b flex justify-between items-center px-8'>
-      <span className='text-3xl font-bold'>ZK Summit 10 Token</span>
-      <span className="text-m">
-        {shortenAddress(address)}
-      </span>
-    </div>
-  );
-}

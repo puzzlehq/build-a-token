@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <PuzzleWeb3Modal
       dAppName='Build-A-Token'
       dAppDescription='Create and manage your own custom token.'
-      dAppUrl='localhost:5173'
+      dAppUrl='https://zksummit10.vercel.app'
       dAppIconURL='https://link.to/assets/your_logo.png'
     />
   </div>
