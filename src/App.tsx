@@ -1,8 +1,9 @@
-import { shortenAddress, useAccount, useConnect } from '@puzzlehq/sdk';
+import { useAccount, useConnect } from '@puzzlehq/sdk';
 import Dashboard from './Dashboard.js';
+import Header from './components/header.js';
 
 function App() {
-  const { connect, isConnected, loading } = useConnect();
+  const { connect, loading } = useConnect();
   const { account } = useAccount();
 
   return (
@@ -14,8 +15,8 @@ function App() {
             loading...
           </div>
         }
-        {!loading && isConnected && <Dashboard />}
-        {!loading && !isConnected && 
+        {!loading && account && <Dashboard />}
+        {!loading && !account && 
           <div className='w-full h-full text-center align-middle'>
             <button onClick={connect}>Connect your wallet</button>
           </div>
@@ -26,14 +27,3 @@ function App() {
 }
 
 export default App;
-
-function Header({address}: {address: string | undefined}) {
-  return (
-    <div className='w-full fixed top-0 h-16 border-b flex justify-between items-center px-8 bg-[#ffffff] dark:bg-[#242424]'>
-      <span className='text-3xl font-bold'>ZK Summit 10 Token</span>
-      {address && <span className="text-m">
-        {shortenAddress(address)}
-      </span>}
-    </div>
-  );
-}
