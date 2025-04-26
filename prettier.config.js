@@ -1,10 +1,10 @@
 // prettier.config.cjs
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  plugins: [require('prettier-plugin-tailwindcss')],
-  tailwindConfig: path.resolve(__dirname, './tailwind.config.cjs'),
-  trailingComma: 'es5',
+  plugins: [require("prettier-plugin-tailwindcss")],
+  tailwindConfig: path.resolve(__dirname, "./tailwind.config.cjs"),
+  trailingComma: "es5",
   tabWidth: 2,
   semi: true,
   singleQuote: true,

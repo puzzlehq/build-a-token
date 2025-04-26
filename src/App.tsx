@@ -1,24 +1,25 @@
-import { Network, useAccount, useConnect } from '@puzzlehq/sdk';
+import { useAccount } from '@puzzlehq/sdk';
 import Dashboard from './Dashboard.js';
 import Header from './components/header.js';
+import { useDappState } from './hooks/useDapp.js';
 
 function App() {
-  const { connect, loading } = 
+  const { connect, isConnecting } = useDappState();
   const { account } = useAccount();
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
       <Header address={account?.address} />
       <div className='w-full h-full pt-20 pb-4 items-center align-middle'>
-        {loading && 
+        {isConnecting && !account && 
           <div className='w-full h-full text-center align-middle'>
             loading...
           </div>
         }
-        {!loading && account && <Dashboard />}
-        {!loading && !account && 
+        {account && <Dashboard />}
+        {!isConnecting && !account && 
           <div className='w-full h-full text-center align-middle'>
-            <button onClick={connect}>Connect your wallet</button>
+            <button onClick={() => connect?.()}>Connect your wallet</button>
           </div>
         }
       </div>

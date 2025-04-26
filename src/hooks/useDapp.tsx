@@ -1,16 +1,27 @@
-import { ConnectResponse, Network, PuzzleAccount, RecordWithPlaintext, useAccount, useConnect, useRecords } from "@puzzlehq/sdk";
+import {
+  ConnectResponse,
+  Network,
+  PuzzleAccount,
+  RecordWithPlaintext,
+  useAccount,
+  useBalance,
+  useConnect,
+  useRecords,
+} from "@puzzlehq/sdk";
 import { createContext, useContext } from "react";
 import { PROGRAM_ID } from "../main";
-import { RecordStatus } from "@puzzlehq/types";
+import { Balance, RecordStatus } from "@puzzlehq/types";
 
 export type DappContextType = {
   records: RecordWithPlaintext[] | undefined;
-  account: PuzzleAccount | undefined
+  account: PuzzleAccount | undefined;
   connect: (() => Promise<ConnectResponse>) | undefined;
   isConnected: boolean | undefined;
+  isConnecting: boolean | undefined;
+  balances: Balance[] | undefined;
 };
 
-const DAppContext = createContext<DappContextType | null>(null)
+const DAppContext = createContext<DappContextType | null>(null);
 
 export const DAppContextProvider = ({
   children,
@@ -19,21 +30,23 @@ export const DAppContextProvider = ({
 }) => {
   const { account } = useAccount();
 
-  const { connect, isConnected } = useConnect({
+  const { connect, isConnected, loading: isConnecting } = useConnect({
     dAppInfo: {
-      description: 'Fun dApp',
-      name: 'Puzzle'
+      description: "Fun dApp",
+      name: "Puzzle",
     },
     permissions: {
       programIds: {
-        [Network.AleoTestnet]: ['token_registry.aleo', 'credits.aleo']
-      }
-    }
-  })
+        [Network.AleoTestnet]: ["token_registry.aleo", "credits.aleo"],
+      },
+    },
+  });
 
   const { records } = useRecords({
-    filter: { programIds: [PROGRAM_ID], status: RecordStatus.Unspent }
+    filter: { programIds: [PROGRAM_ID], status: RecordStatus.Unspent },
   });
+
+  const { balances } = useBalance();
 
   return (
     <DAppContext.Provider
@@ -41,16 +54,15 @@ export const DAppContextProvider = ({
         account,
         connect,
         isConnected,
-        records
+        records,
+        isConnecting,
+        balances
       }}
-    
     >
       {children}
     </DAppContext.Provider>
-  )
-
-  
-}
+  );
+};
 
 export const useDappState = (): DappContextType => {
   const ctx = useContext(DAppContext);
@@ -59,6 +71,8 @@ export const useDappState = (): DappContextType => {
     account: ctx?.account,
     connect: ctx?.connect,
     isConnected: ctx?.isConnected,
-    records: ctx?.records
+    isConnecting: ctx?.isConnected,
+    records: ctx?.records,
+    balances: ctx?.balances
   };
 };

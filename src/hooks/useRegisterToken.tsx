@@ -1,14 +1,17 @@
-import { requestCreateEvent, useAccount, useEvent } from "@puzzlehq/sdk"
-import { EventType } from "@puzzlehq/types"
-import { useMutation } from "@tanstack/react-query"
-import { PROGRAM_ID } from "../main"
+import { requestCreateEvent, useAccount, useEvent } from "@puzzlehq/sdk";
+import { EventType } from "@puzzlehq/types";
+import { useMutation } from "@tanstack/react-query";
+import { PROGRAM_ID } from "../main";
+import { asciiToU128 } from "../data/u128";
+import { useTokenIds } from "./useTokenId";
+import { useShallow } from "zustand/shallow";
 
 type RegisterTokenProps = {
-  name?: string,
-  symbol?: string,
-  decimals?: number,
-  max_supply?: number,
-} 
+  name?: string;
+  symbol?: string;
+  decimals?: number;
+  max_supply?: number;
+};
 
 // async transition register_token(
 //   public token_id: field,
@@ -20,39 +23,61 @@ type RegisterTokenProps = {
 //   public external_authorization_party: address
 // )
 
-export const useRegisterToken = ({ name, symbol, decimals, max_supply }: RegisterTokenProps) => {
+export const useRegisterToken = ({
+  name,
+  symbol,
+  decimals,
+  max_supply,
+}: RegisterTokenProps) => {
   const { account } = useAccount();
+  const [addTokenId] = useTokenIds(useShallow((state) => [state.addTokenId]));
 
   const external_authorization_required = false;
   const external_authorization_party = account?.address;
 
+  const name_u128 = asciiToU128(name ?? '');
+  const symbol_u128 = asciiToU128(symbol ?? '');
+
+  const generateRandomTokenId = () => {
+    return Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join('');
+  };
+
+  const tokenId = `${generateRandomTokenId()}field`;
+
   const { data, isPending, error, mutate } = useMutation({
     mutationFn: async () => {
       if (!name || !symbol || !max_supply || !decimals) {
-        throw new Error('Missing required parameters for register_token')
+        throw new Error("Missing required parameters for register_token");
       }
-      
+
       const eventCreateResponse = await requestCreateEvent({
         programId: PROGRAM_ID,
-        functionId: 'register_token',
+        functionId: "register_token",
         fee: 0.25,
         type: EventType.Execute,
-        inputs: []
+        inputs: [],
       });
 
       if (eventCreateResponse.error) {
-        throw new Error(eventCreateResponse.error)
+        throw new Error(eventCreateResponse.error);
       } else if (!eventCreateResponse.eventId) {
-        throw new Error(`No eventId returned!`)
+        throw new Error(`No eventId returned!`);
       }
 
+      addTokenId(tokenId);
+
       return eventCreateResponse.eventId;
-    }
+    },
   });
 
-  const { event } = useEvent({ id: data ?? '' });
+  const { event } = useEvent({ id: data ?? "" });
 
   return {
-    data, isPending, error, event, eventStatus: event?.status, mutate
-  }
-}
+    data,
+    isPending,
+    error,
+    event,
+    eventStatus: event?.status,
+    mutate,
+  };
+};
