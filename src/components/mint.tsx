@@ -1,16 +1,15 @@
-import { EventType, useEvents, useRequestCreateEvent } from '@puzzlehq/sdk';
+import { EventType, useEvent, useRequestCreateEvent } from '@puzzlehq/sdk';
 import { useState } from 'react';
-import { PROGRAM_ID } from '../main';
 
 function Mint() {
   const [recipient, setRecipient] = useState<string | undefined>();
   const [amount, setAmount] = useState<string | undefined>();
 
   const {
-    requestCreateEvent,
     loading: execute_loading,
     eventId,
-    error
+    error,
+    createEvent
   } = useRequestCreateEvent({
     programId: 'zksummit_token_v10.aleo',
     functionId: 'mint_private',
@@ -19,9 +18,8 @@ function Mint() {
     fee: 0.25,
   })
 
-  const { events } = useEvents({ filter: { programId: PROGRAM_ID, type: EventType.Execute } });
-  const event = events.find((e) => e._id === eventId);
-
+  const { event } = useEvent({ id: eventId ?? '' });
+  
   return (
     <div className='w-full border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>
       <span className='text-xl font-bold'>Mint</span>
@@ -55,7 +53,7 @@ function Mint() {
       </div>
       <button 
         disabled={execute_loading || !amount || !recipient}
-        onClick={requestCreateEvent}
+        onClick={() => createEvent()}
       >
         mint
       </button>

@@ -1,58 +1,18 @@
-import { EventType, RecordWithPlaintext, useRecords, useRequestCreateEvent } from "@puzzlehq/sdk";
-import { useEffect, useState } from "react";
-import { PROGRAM_ID } from "../main";
+import { RecordWithPlaintext } from "@puzzlehq/sdk";
+import { useState } from "react";
+import { useTransfer } from "../hooks/useTransfer";
 
 function Transfer() {
-
   const [recipient, setRecipient] = useState<string | undefined>();
   const [amount, setAmount] = useState<string | undefined>();
   const [record, setRecord] = useState<RecordWithPlaintext | undefined>();
   const [isReadyToExecute, setIsReadyToExecute] = useState(false);
 
-  const { records } = useRecords({ filter: { type: "unspent", programId: PROGRAM_ID } });
+  const { } = useTransfer({
+    amount,
+    recipient,
 
-  const {
-    requestCreateEvent,
-    loading: execute_loading,
-    eventId,
-    error
-  } = useRequestCreateEvent({
-    programId: PROGRAM_ID,
-    functionId: 'transfer_private',
-    type: EventType.Execute,
-    fee: 0.25,
-    inputs: [record ?? '', recipient ?? '', amount + 'u64']
-  });
-
-  const send = () => {
-    if (!records) {
-      console.log('send called with no records');
-      return;
-    }
-    const recordToSpendIndex = records.findIndex(r => {
-      const credits = Number(r.plaintext.split('amount:')[1].split('u64')[0]);
-      if (credits > Number(amount!)) {
-        console.log('setting record', r);
-        return r;
-      }
-    });
-    if (recordToSpendIndex < 0) {
-      console.log('could not find record to spend');
-      return;
-    }
-    const recordToSpend = records[recordToSpendIndex];
-    console.log(`sending ${amount} to ${recipient} with ${recordToSpend}`);
-    setRecord(recordToSpend);
-    setIsReadyToExecute(true);
-  };
-
-  useEffect(() => {
-    if (isReadyToExecute) {
-      requestCreateEvent();
-      setIsReadyToExecute(false);
-    }
-  }, [isReadyToExecute]);
-
+  })
 
   return (
     <div className='w-full border rounded-lg flex flex-col items-center justify-center gap-4 p-4'>

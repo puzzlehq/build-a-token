@@ -1,9 +1,9 @@
-import { useAccount, useConnect } from '@puzzlehq/sdk';
+import { Network, useAccount, useConnect } from '@puzzlehq/sdk';
 import Dashboard from './Dashboard.js';
 import Header from './components/header.js';
 
 function App() {
-  const { connect, loading } = useConnect();
+  const { connect, loading } = 
   const { account } = useAccount();
 
   return (
