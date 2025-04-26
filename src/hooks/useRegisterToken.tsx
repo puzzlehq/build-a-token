@@ -55,6 +55,7 @@ export const useRegisterToken = ({
         functionId: "register_token",
         fee: 0.25,
         type: EventType.Execute,
+        // STEP 1. Fill out inputs to register your token
         inputs: [],
       });
 

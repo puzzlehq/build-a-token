@@ -2,6 +2,8 @@ import { requestCreateEvent, useEvent } from "@puzzlehq/sdk";
 import { EventType, RecordWithPlaintext } from "@puzzlehq/types";
 import { useMutation } from "@tanstack/react-query";
 import { PROGRAM_ID } from "../main";
+import { useTokenIds } from "./useTokenId";
+import { useShallow } from "zustand/shallow";
 
 type TransferProps = {
   functionId?: "transfer_private" | "transfer_public";
@@ -28,6 +30,8 @@ export const useTransfer = ({
   recipient,
   record,
 }: TransferProps) => {
+  const [activeTokenId] = useTokenIds(useShallow((state => [state.activeTokenId])));
+
   const { data, isPending, error, mutate } = useMutation({
     mutationFn: async () => {
       if (!functionId || !amount || !recipient) {
@@ -41,6 +45,7 @@ export const useTransfer = ({
         functionId,
         fee: 0.25,
         type: EventType.Execute,
+        // STEP 3. Fill out inputs to transfer your tokens to a friend!
         inputs: [],
       });
 

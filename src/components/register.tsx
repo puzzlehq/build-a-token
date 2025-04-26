@@ -103,13 +103,14 @@ function Register() {
       <button
         disabled={isPending || !isValidInputs}
         onClick={() => mutate()}
+        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
       >
-        Mint
+        {isPending ? 'Registering...' : 'Register'}
       </button>
       {error && <p>{error.message}</p>}
       {event && <p>{event?._id} {eventStatus}</p>}
       {event && (
-        <pre className="whitespace-pre-wrap">
+        <pre className="whitespace-pre-wrap break-words">
           {JSON.stringify(event, null, 2)}
         </pre>
       )}

@@ -96,7 +96,7 @@ function Mint() {
       {error && <p className="text-red-500">{error.message}</p>}
       {event && <p>{event?._id} {eventStatus}</p>}
       {event && (
-        <pre className="whitespace-pre-wrap">
+        <pre className="whitespace-pre-wrap break-words">
           {JSON.stringify(event, null, 2)}
         </pre>
       )}

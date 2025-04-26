@@ -13,22 +13,36 @@ export const useRegistryBalance = () => {
       return balances?.find(b => b.tokenId === activeTokenId);
     }
   }, [activeTokenId, balances])
+  const [largestRecord, setLargestRecord] = useState<any | undefined>();
   const [maxSpendableBalance, setMaxSpendableBalance] = useState<number | undefined>();
 
   useEffect(() => {
     if (records) {
       let max = 0;
-      records.forEach((r) => {
+      let largest = undefined;
+      const filteredRecord = records.filter(r => {
+        const recordtokenid = r.data.token_id;
+        if (typeof recordtokenid === 'string') {
+          return recordtokenid.replace('.private', '') === activeTokenId
+        }
+        return false
+      })
+      filteredRecord.forEach((r) => {
         const credits =
           Number(r.plaintext.split("amount:")[1]?.split("u64")[0]) ?? 0;
-        max = Math.max(credits, max);
+        if (credits > max) {
+          max = credits;
+          largest = r;
+        }
       });
+      setLargestRecord(largest);
       setMaxSpendableBalance(max);
     }
-  }, [records]);
+  }, [records, activeTokenId]);
 
   return {
     balance,
-    maxSpendableBalance
+    largestRecord,
+    maxSpendableBalance,
   }
 }

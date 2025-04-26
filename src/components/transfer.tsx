@@ -1,21 +1,24 @@
-import { RecordWithPlaintext } from "@puzzlehq/sdk";
 import { useState } from "react";
 import { useTransfer } from "../hooks/useTransfer";
+import { useRegistryBalance } from "../hooks/useRegistryBalance";
 
 function Transfer() {
+  const { largestRecord } = useRegistryBalance();
+
   const [recipient, setRecipient] = useState<string | undefined>();
   const [amount, setAmount] = useState<number | undefined>();
-  const [record, setRecord] = useState<RecordWithPlaintext | undefined>();
   const [isPublic, setIsPublic] = useState(true);
 
   const functionId = isPublic ? 'transfer_public' : 'transfer_private';
 
-  const {data, error, event, isPending, eventStatus, mutate} = useTransfer({
+  const {data, error, event, isPending, mutate} = useTransfer({
     functionId,
     amount,
     recipient,
-    record
+    record: largestRecord
   });
+
+  const isValidInputs = !!amount && !!recipient && recipient !== '';
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border p-4">
@@ -74,15 +77,16 @@ function Transfer() {
         </div>
       </div>
       <button
-        disabled={isPending || !amount || !recipient}
+        disabled={isPending || !isValidInputs}
         onClick={() => mutate()}
+        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
       >
-        Send
+        {isPending ? 'Sending...' : 'Send'}
       </button>
       {error && <p>{error.message}</p>}
       {data && <p>{data}</p>}
       {event && (
-        <pre className="whitespace-pre-wrap">
+        <pre className="whitespace-pre-wrap break-words">
           {JSON.stringify(event, null, 2)}
         </pre>
       )}

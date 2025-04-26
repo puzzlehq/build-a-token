@@ -2,6 +2,8 @@ import { requestCreateEvent, useAccount, useEvent } from "@puzzlehq/sdk";
 import { EventType } from "@puzzlehq/types";
 import { useMutation } from "@tanstack/react-query";
 import { PROGRAM_ID } from "../main";
+import { useTokenIds } from "./useTokenId";
+import { useShallow } from "zustand/shallow";
 
 type MintTokenProps = {
   functionId?: "mint_public" | "mint_private";
@@ -29,14 +31,14 @@ export const useMintToken = ({
   amount,
   recipient,
 }: MintTokenProps) => {
-  const { account } = useAccount();
+  const [activeTokenId] = useTokenIds(useShallow((state) => [state.activeTokenId]));
 
-  const external_authorization_required = false;
-  const authorized_until = 0;
+  const external_authorization_required = 'false';
+  const authorized_until = `0u32`;
 
   const { data, isPending, error, mutate } = useMutation({
     mutationFn: async () => {
-      if (!functionId || !amount || !recipient) {
+      if (!functionId || !amount || !recipient || !activeTokenId) {
         throw new Error(
           "Missing required parameters for mint_public and mint_private ",
         );
@@ -47,6 +49,7 @@ export const useMintToken = ({
         functionId,
         fee: 0.25,
         type: EventType.Execute,
+        // STEP 2. Fill out inputs to mint your tokens!
         inputs: [],
       });
 
