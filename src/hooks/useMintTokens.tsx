@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { PROGRAM_ID } from "../main";
 import { useTokenIds } from "./useTokenId";
 import { useShallow } from "zustand/shallow";
+import { useDappState } from "./useDapp";
 
 type MintTokenProps = {
   functionId?: "mint_public" | "mint_private";
@@ -44,13 +45,16 @@ export const useMintToken = ({
         );
       }
 
+      const inputPublic = [activeTokenId, recipient, `${amount}u128`, authorized_until];
+      const inputPrivate = [activeTokenId, recipient, `${amount}u128`, `false`, authorized_until]
+
       const eventCreateResponse = await requestCreateEvent({
         programId: PROGRAM_ID,
         functionId,
         fee: 0.25,
         type: EventType.Execute,
         // STEP 2. Fill out inputs to mint your tokens!
-        inputs: [],
+        inputs: functionId === 'mint_public' ? inputPublic : inputPrivate,
       });
 
       if (eventCreateResponse.error) {

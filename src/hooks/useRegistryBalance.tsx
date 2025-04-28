@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDappState } from "./useDapp";
 import { useTokenIds } from "./useTokenId";
 import { useShallow } from "zustand/shallow";
+import { RecordWithPlaintext } from "@puzzlehq/types";
 
 export const useRegistryBalance = () => {
   const [activeTokenId] = useTokenIds(useShallow((state) => [state.activeTokenId]));
@@ -13,7 +14,7 @@ export const useRegistryBalance = () => {
       return balances?.find(b => b.tokenId === activeTokenId);
     }
   }, [activeTokenId, balances])
-  const [largestRecord, setLargestRecord] = useState<any | undefined>();
+  const [largestRecord, setLargestRecord] = useState<RecordWithPlaintext | undefined>();
   const [maxSpendableBalance, setMaxSpendableBalance] = useState<number | undefined>();
 
   useEffect(() => {

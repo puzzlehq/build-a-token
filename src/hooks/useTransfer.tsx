@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { PROGRAM_ID } from "../main";
 import { useTokenIds } from "./useTokenId";
 import { useShallow } from "zustand/shallow";
+import { useDappState } from "./useDapp";
+import { useRegistryBalance } from "./useRegistryBalance";
 
 type TransferProps = {
   functionId?: "transfer_private" | "transfer_public";
@@ -28,17 +30,20 @@ export const useTransfer = ({
   amount,
   functionId,
   recipient,
-  record,
 }: TransferProps) => {
   const [activeTokenId] = useTokenIds(useShallow((state => [state.activeTokenId])));
-
+  const { largestRecord } = useRegistryBalance();
+  console.log(largestRecord);
   const { data, isPending, error, mutate } = useMutation({
     mutationFn: async () => {
-      if (!functionId || !amount || !recipient) {
+      if (!functionId || !amount || !recipient || !activeTokenId) {
         throw new Error("Missing required parameters for transfer");
-      } else if (functionId === "transfer_private" && !record) {
+      } else if (functionId === "transfer_private" && !largestRecord) {
         throw new Error("Missing record for transfer_private");
       }
+
+      const inputsPublic = [activeTokenId, recipient, `${amount}u128`];
+      const inputsPrivate = [recipient, `${amount}u128`, largestRecord!.plaintext];
 
       const eventCreateResponse = await requestCreateEvent({
         programId: PROGRAM_ID,
@@ -46,7 +51,7 @@ export const useTransfer = ({
         fee: 0.25,
         type: EventType.Execute,
         // STEP 3. Fill out inputs to transfer your tokens to a friend!
-        inputs: [],
+        inputs: functionId === 'transfer_public' ? inputsPublic : inputsPrivate
       });
 
       if (eventCreateResponse.error) {
