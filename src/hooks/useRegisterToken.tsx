@@ -35,18 +35,26 @@ export const useRegisterToken = ({
   const external_authorization_required = false;
   const external_authorization_party = account?.address;
 
-  const name_u128 = asciiToU128(name ?? '');
-  const symbol_u128 = asciiToU128(symbol ?? '');
+  const name_u128 = asciiToU128(name ?? "");
+  const symbol_u128 = asciiToU128(symbol ?? "");
 
   const generateRandomTokenId = () => {
-    return Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join('');
+    return Array.from({ length: 24 }, () =>
+      Math.floor(Math.random() * 10),
+    ).join("");
   };
 
   const tokenId = `${generateRandomTokenId()}field`;
 
   const { data, isPending, error, mutate } = useMutation({
     mutationFn: async () => {
-      if (!name || !symbol || !max_supply || !decimals || !external_authorization_party) {
+      if (
+        !name ||
+        !symbol ||
+        !max_supply ||
+        !decimals ||
+        !external_authorization_party
+      ) {
         throw new Error("Missing required parameters for register_token");
       }
 
@@ -56,7 +64,15 @@ export const useRegisterToken = ({
         fee: 0.25,
         type: EventType.Execute,
         // STEP 1. Fill out inputs to register your token
-        inputs: [tokenId, name_u128, symbol_u128, `${decimals}u8`, `${max_supply}u128`, `${external_authorization_required}`, `${external_authorization_party}`],
+        inputs: [
+          tokenId,
+          name_u128,
+          symbol_u128,
+          `${decimals}u8`,
+          `${max_supply}u128`,
+          `${external_authorization_required}`,
+          `${external_authorization_party}`,
+        ],
       });
 
       if (eventCreateResponse.error) {

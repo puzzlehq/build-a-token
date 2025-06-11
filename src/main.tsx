@@ -11,14 +11,12 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-          <PuzzleWalletProvider>
-
-    <DAppContextProvider>
+    <PuzzleWalletProvider>
+      <DAppContextProvider>
         <div className="h-screen w-screen">
           <App />
         </div>
-        </DAppContextProvider>
-      </PuzzleWalletProvider>
-  </QueryClientProvider>
-
+      </DAppContextProvider>
+    </PuzzleWalletProvider>
+  </QueryClientProvider>,
 );

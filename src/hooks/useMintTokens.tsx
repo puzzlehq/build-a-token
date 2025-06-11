@@ -32,9 +32,11 @@ export const useMintToken = ({
   amount,
   recipient,
 }: MintTokenProps) => {
-  const [activeTokenId] = useTokenIds(useShallow((state) => [state.activeTokenId]));
+  const [activeTokenId] = useTokenIds(
+    useShallow((state) => [state.activeTokenId]),
+  );
 
-  const external_authorization_required = 'false';
+  const external_authorization_required = "false";
   const authorized_until = `0u32`;
 
   const { data, isPending, error, mutate } = useMutation({
@@ -45,8 +47,19 @@ export const useMintToken = ({
         );
       }
 
-      const inputPublic = [activeTokenId, recipient, `${amount}u128`, authorized_until];
-      const inputPrivate = [activeTokenId, recipient, `${amount}u128`, `false`, authorized_until]
+      const inputPublic = [
+        activeTokenId,
+        recipient,
+        `${amount}u128`,
+        authorized_until,
+      ];
+      const inputPrivate = [
+        activeTokenId,
+        recipient,
+        `${amount}u128`,
+        `false`,
+        authorized_until,
+      ];
 
       const eventCreateResponse = await requestCreateEvent({
         programId: PROGRAM_ID,
@@ -54,7 +67,7 @@ export const useMintToken = ({
         fee: 0.25,
         type: EventType.Execute,
         // STEP 2. Fill out inputs to mint your tokens!
-        inputs: functionId === 'mint_public' ? inputPublic : inputPrivate,
+        inputs: functionId === "mint_public" ? inputPublic : inputPrivate,
       });
 
       if (eventCreateResponse.error) {

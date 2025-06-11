@@ -9,16 +9,16 @@ function Transfer() {
   const [amount, setAmount] = useState<number | undefined>();
   const [isPublic, setIsPublic] = useState(true);
 
-  const functionId = isPublic ? 'transfer_public' : 'transfer_private';
+  const functionId = isPublic ? "transfer_public" : "transfer_private";
 
-  const {data, error, event, isPending, mutate} = useTransfer({
+  const { data, error, event, isPending, mutate } = useTransfer({
     functionId,
     amount,
     recipient,
-    record: largestRecord
+    record: largestRecord,
   });
 
-  const isValidInputs = !!amount && !!recipient && recipient !== '';
+  const isValidInputs = !!amount && !!recipient && recipient !== "";
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border p-4">
@@ -50,18 +50,20 @@ function Transfer() {
             id="amount"
             className="block w-full rounded-md border-0 p-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             placeholder="10"
-            type={'number'}
+            type={"number"}
             onChange={(e) => setAmount(Number(e.target.value))}
           />
         </div>
       </div>
-      <div className="flex items-center justify-between w-[80%]">
+      <div className="flex w-[80%] items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Type:</span>
           <button
             onClick={() => setIsPublic(true)}
             className={`rounded-md px-2.5 py-1.5 text-sm font-medium ${
-              isPublic ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              isPublic
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             Public
@@ -69,7 +71,9 @@ function Transfer() {
           <button
             onClick={() => setIsPublic(false)}
             className={`rounded-md px-2.5 py-1.5 text-sm font-medium ${
-              !isPublic ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              !isPublic
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             Private
@@ -79,9 +83,9 @@ function Transfer() {
       <button
         disabled={isPending || !isValidInputs}
         onClick={() => mutate()}
-        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+        className="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:bg-gray-400"
       >
-        {isPending ? 'Sending...' : 'Send'}
+        {isPending ? "Sending..." : "Send"}
       </button>
       {error && <p>{error.message}</p>}
       {data && <p>{data}</p>}

@@ -31,7 +31,9 @@ export const useTransfer = ({
   functionId,
   recipient,
 }: TransferProps) => {
-  const [activeTokenId] = useTokenIds(useShallow((state => [state.activeTokenId])));
+  const [activeTokenId] = useTokenIds(
+    useShallow((state) => [state.activeTokenId]),
+  );
   const { largestRecord } = useRegistryBalance();
   console.log(largestRecord);
   const { data, isPending, error, mutate } = useMutation({
@@ -43,7 +45,11 @@ export const useTransfer = ({
       }
 
       const inputsPublic = [activeTokenId, recipient, `${amount}u128`];
-      const inputsPrivate = [recipient, `${amount}u128`, largestRecord!.plaintext];
+      const inputsPrivate = [
+        recipient,
+        `${amount}u128`,
+        largestRecord!.plaintext,
+      ];
 
       const eventCreateResponse = await requestCreateEvent({
         programId: PROGRAM_ID,
@@ -51,7 +57,7 @@ export const useTransfer = ({
         fee: 0.25,
         type: EventType.Execute,
         // STEP 3. Fill out inputs to transfer your tokens to a friend!
-        inputs: functionId === 'transfer_public' ? inputsPublic : inputsPrivate
+        inputs: functionId === "transfer_public" ? inputsPublic : inputsPrivate,
       });
 
       if (eventCreateResponse.error) {

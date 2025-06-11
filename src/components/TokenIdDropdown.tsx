@@ -1,4 +1,4 @@
-import { useTokenIds } from '../hooks/useTokenId';
+import { useTokenIds } from "../hooks/useTokenId";
 
 export const TokenIdDropdown = () => {
   const { tokenIds, activeTokenId, setActiveTokenId } = useTokenIds();
@@ -8,9 +8,9 @@ export const TokenIdDropdown = () => {
   return (
     <div className="relative">
       <select
-        value={activeTokenId || ''}
+        value={activeTokenId || ""}
         onChange={(e) => setActiveTokenId(e.target.value)}
-        className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="" disabled>
           Select a Token ID
@@ -23,4 +23,4 @@ export const TokenIdDropdown = () => {
       </select>
     </div>
   );
-}; 
+};

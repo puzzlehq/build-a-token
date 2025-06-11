@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type TokenIdStore = {
   tokenIds: string[];
@@ -17,21 +17,21 @@ export const useTokenIds = create<TokenIdStore>()(
         const tokenIds = get().tokenIds;
         set({
           tokenIds: [...tokenIds, tokenId],
-          activeTokenId: tokenId
-        })
+          activeTokenId: tokenId,
+        });
       },
       setActiveTokenId: (tokenId: string) => {
         const tokenIds = get().tokenIds;
         if (!tokenIds.includes(tokenId)) {
-          throw new Error(`tokenId ${tokenId} not in tokenIds`)
-        };
+          throw new Error(`tokenId ${tokenId} not in tokenIds`);
+        }
         set({
-          activeTokenId: tokenId
-        })
-      }
+          activeTokenId: tokenId,
+        });
+      },
     }),
     {
-      name: 'tokenId-storage',
-    }
-  )
+      name: "tokenId-storage",
+    },
+  ),
 );

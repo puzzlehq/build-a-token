@@ -16,14 +16,14 @@ function Dashboard() {
     <div className="flex h-full w-full flex-col items-center gap-2">
       <div className="flex w-3/4 flex-col items-center justify-center gap-10 pb-4 lg:w-1/2">
         <TokenIdDropdown />
-        {account?.address === account.address &&
+        {account?.address === account.address && (
           <>
             <Balance />
-            <Register/>
+            <Register />
             <Mint />
-            <Transfer/>
+            <Transfer />
           </>
-        }
+        )}
       </div>
     </div>
   );

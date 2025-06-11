@@ -1,27 +1,27 @@
-import { useAccount } from '@puzzlehq/sdk';
-import Dashboard from './Dashboard.js';
-import Header from './components/header.js';
-import { useDappState } from './hooks/useDapp.js';
+import { useAccount } from "@puzzlehq/sdk";
+import Dashboard from "./Dashboard.js";
+import Header from "./components/header.js";
+import { useDappState } from "./hooks/useDapp.js";
 
 function App() {
   const { connect, isConnecting } = useDappState();
   const { account } = useAccount();
 
   return (
-    <div className='w-full h-full flex justify-center items-center'>
+    <div className="flex h-full w-full items-center justify-center">
       <Header address={account?.address} />
-      <div className='w-full h-full pt-20 pb-4 items-center align-middle'>
-        {isConnecting && !account && 
-          <div className='w-full h-full text-center align-middle'>
+      <div className="h-full w-full items-center pb-4 pt-20 align-middle">
+        {isConnecting && !account && (
+          <div className="h-full w-full text-center align-middle">
             loading...
           </div>
-        }
+        )}
         {account && <Dashboard />}
-        {!isConnecting && !account && 
-          <div className='w-full h-full text-center align-middle'>
+        {!isConnecting && !account && (
+          <div className="h-full w-full text-center align-middle">
             <button onClick={() => connect?.()}>Connect your wallet</button>
           </div>
-        }
+        )}
       </div>
     </div>
   );

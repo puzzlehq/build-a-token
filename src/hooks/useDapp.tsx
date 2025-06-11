@@ -30,7 +30,11 @@ export const DAppContextProvider = ({
 }) => {
   const { account } = useAccount();
 
-  const { connect, isConnected, loading: isConnecting } = useConnect({
+  const {
+    connect,
+    isConnected,
+    loading: isConnecting,
+  } = useConnect({
     dAppInfo: {
       description: "Fun dApp",
       name: "Puzzle",
@@ -56,7 +60,7 @@ export const DAppContextProvider = ({
         isConnected,
         records,
         isConnecting,
-        balances
+        balances,
       }}
     >
       {children}
@@ -73,6 +77,6 @@ export const useDappState = (): DappContextType => {
     isConnected: ctx?.isConnected,
     isConnecting: ctx?.isConnected,
     records: ctx?.records,
-    balances: ctx?.balances
+    balances: ctx?.balances,
   };
 };

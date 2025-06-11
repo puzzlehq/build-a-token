@@ -8,5 +8,5 @@ export function asciiToU128(asciiString: string): string {
   }
 
   // Convert the BigInt to a string and append "u128"
-  return numericValue.toString() + 'u128';
+  return numericValue.toString() + "u128";
 }

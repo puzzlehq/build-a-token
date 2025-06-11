@@ -4,30 +4,26 @@ import { useTokenIds } from "../hooks/useTokenId";
 import { useShallow } from "zustand/shallow";
 
 function Mint() {
-  const [activeTokenId] = useTokenIds(useShallow((state) => [state.activeTokenId]));
+  const [activeTokenId] = useTokenIds(
+    useShallow((state) => [state.activeTokenId]),
+  );
   const [amount, setAmount] = useState<number | undefined>();
   const [recipient, setRecipient] = useState<string | undefined>();
   const [isPublic, setIsPublic] = useState(true);
 
-  const {
-    event,
-    eventStatus,
-    mutate,
-    isPending,
-    error,
-  } = useMintToken({
+  const { event, eventStatus, mutate, isPending, error } = useMintToken({
     functionId: isPublic ? "mint_public" : "mint_private",
     amount,
     recipient,
   });
 
-  const isValidInputs = !!amount && !!recipient && recipient.trim() !== '';
+  const isValidInputs = !!amount && !!recipient && recipient.trim() !== "";
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 rounded-lg border p-4">
       <span className="text-xl font-bold">Mint</span>
       <p>TokenId: {activeTokenId}</p>
-      
+
       <div className="w-[80%]">
         <label htmlFor="amount" className="block text-sm font-medium leading-6">
           Amount
@@ -47,7 +43,10 @@ function Mint() {
       </div>
 
       <div className="w-[80%]">
-        <label htmlFor="recipient" className="block text-sm font-medium leading-6">
+        <label
+          htmlFor="recipient"
+          className="block text-sm font-medium leading-6"
+        >
           Recipient Address
         </label>
         <div className="mt-2">
@@ -63,13 +62,15 @@ function Mint() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between w-[80%]">
+      <div className="flex w-[80%] items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Type:</span>
           <button
             onClick={() => setIsPublic(true)}
             className={`rounded-md px-2.5 py-1.5 text-sm font-medium ${
-              isPublic ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              isPublic
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             Public
@@ -77,7 +78,9 @@ function Mint() {
           <button
             onClick={() => setIsPublic(false)}
             className={`rounded-md px-2.5 py-1.5 text-sm font-medium ${
-              !isPublic ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              !isPublic
+                ? "bg-indigo-100 text-indigo-700"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             Private
@@ -88,13 +91,17 @@ function Mint() {
       <button
         disabled={isPending || !isValidInputs}
         onClick={() => mutate()}
-        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+        className="rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 disabled:bg-gray-400"
       >
-        {isPending ? 'Minting...' : 'Mint'}
+        {isPending ? "Minting..." : "Mint"}
       </button>
 
       {error && <p className="text-red-500">{error.message}</p>}
-      {event && <p>{event?._id} {eventStatus}</p>}
+      {event && (
+        <p>
+          {event?._id} {eventStatus}
+        </p>
+      )}
       {event && (
         <pre className="whitespace-pre-wrap break-words">
           {JSON.stringify(event, null, 2)}

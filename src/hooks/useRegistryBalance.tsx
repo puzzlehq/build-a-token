@@ -5,29 +5,35 @@ import { useShallow } from "zustand/shallow";
 import { RecordWithPlaintext } from "@puzzlehq/types";
 
 export const useRegistryBalance = () => {
-  const [activeTokenId] = useTokenIds(useShallow((state) => [state.activeTokenId]));
+  const [activeTokenId] = useTokenIds(
+    useShallow((state) => [state.activeTokenId]),
+  );
 
   const { records, balances } = useDappState();
 
   const balance = useMemo(() => {
     if (activeTokenId && balances) {
-      return balances?.find(b => b.tokenId === activeTokenId);
+      return balances?.find((b) => b.tokenId === activeTokenId);
     }
-  }, [activeTokenId, balances])
-  const [largestRecord, setLargestRecord] = useState<RecordWithPlaintext | undefined>();
-  const [maxSpendableBalance, setMaxSpendableBalance] = useState<number | undefined>();
+  }, [activeTokenId, balances]);
+  const [largestRecord, setLargestRecord] = useState<
+    RecordWithPlaintext | undefined
+  >();
+  const [maxSpendableBalance, setMaxSpendableBalance] = useState<
+    number | undefined
+  >();
 
   useEffect(() => {
     if (records) {
       let max = 0;
       let largest = undefined;
-      const filteredRecord = records.filter(r => {
+      const filteredRecord = records.filter((r) => {
         const recordtokenid = r.data.token_id;
-        if (typeof recordtokenid === 'string') {
-          return recordtokenid.replace('.private', '') === activeTokenId
+        if (typeof recordtokenid === "string") {
+          return recordtokenid.replace(".private", "") === activeTokenId;
         }
-        return false
-      })
+        return false;
+      });
       filteredRecord.forEach((r) => {
         const credits =
           Number(r.plaintext.split("amount:")[1]?.split("u64")[0]) ?? 0;
@@ -45,5 +51,5 @@ export const useRegistryBalance = () => {
     balance,
     largestRecord,
     maxSpendableBalance,
-  }
-}
+  };
+};
